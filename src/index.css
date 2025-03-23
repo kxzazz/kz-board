@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  @apply box-border bg-black text-white;
+}
+
+@theme bgcol {
+  --color-main-bg: #0d1117;
+  --color-col-bg: #161c22;
+}
