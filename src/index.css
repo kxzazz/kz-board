@@ -11,14 +11,14 @@ body,
   --color-col-bg: #161c22;
 }
 
---webkit-scrollbar {
+::--webkit-scrollbar {
   width: 4px;
 }
 
---webkit-scrollbar-horizontal {
+::--webkit-scrollbar-horizontal {
   height: 8px;
 }
 
---webkit-scrollbar-thumb {
+::--webkit-scrollbar-thumb {
   @apply rounded-xl bg-rose-800;
 }
