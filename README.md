@@ -1,6 +1,6 @@
 # KZBoard
 
-A Kanban board built with React and Tailwind CSS.
+A Kanban board built with React, TypeScript, TailwindCSS, and DND-Kit.
 
 ## Features
 
