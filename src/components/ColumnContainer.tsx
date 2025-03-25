@@ -1,15 +1,19 @@
 import { useSortable } from "@dnd-kit/sortable";
 import MinusIcon from "../icons/MinusIcon";
-import { Column, Id } from "../types";
+import { Column, Id, Task } from "../types";
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
+import PlusIcon from "../icons/PlusIcon";
+import TaskCard from "./TaskCard";
 interface Props {
   column: Column;
-  DeleteColumn: (id: Id) => void;
-  UpdateColumn: (id: Id, title: string) => void;
+  deleteColumn: (id: Id) => void;
+  updateColumn: (id: Id, title: string) => void;
+  createTask: (columnId: Id) => void;
+  deleteTask: (id: Id) => void;
+  tasks: Task[];
 }
 const ColumnContainer = (props: Props) => {
-  const { column, DeleteColumn, UpdateColumn } = props;
   const [editMode, setEditMode] = useState(false);
   const {
     attributes,
@@ -19,10 +23,10 @@ const ColumnContainer = (props: Props) => {
     transition,
     isDragging,
   } = useSortable({
-    id: column.id,
+    id: props.column.id,
     data: {
       type: "Column",
-      column,
+      column: props.column,
     },
     disabled: editMode,
   });
@@ -57,11 +61,13 @@ const ColumnContainer = (props: Props) => {
           <div className="bg-col-bg flex items-center justify-center rounded-full px-2 py-1 text-sm">
             0
           </div>
-          {!editMode && column.title}
+          {!editMode && props.column.title}
           {editMode && (
             <input
-              value={column.title}
-              onChange={(e) => UpdateColumn(column.id, e.target.value)}
+              value={props.column.title}
+              onChange={(e) =>
+                props.updateColumn(props.column.id, e.target.value)
+              }
               autoFocus
               onBlur={() => setEditMode(false)}
               onKeyDown={(e) => e.key === "Enter" && setEditMode(false)}
@@ -70,13 +76,23 @@ const ColumnContainer = (props: Props) => {
           )}
         </div>
         <button
-          onClick={() => DeleteColumn(column.id)}
+          onClick={() => props.deleteColumn(props.column.id)}
           className="hover:bg-col-bg rounded-full stroke-gray-500 px-1 py-2 hover:stroke-white"
         >
           <MinusIcon />
         </button>
       </div>
-      <div className="flex flex-grow">Content</div>
+      <div className="flex flex-grow flex-col gap-4 overflow-x-hidden overflow-y-auto p-2">
+        {props.tasks.map((task) => (
+          <TaskCard key={task.id} task={task} deleteTask={props.deleteTask} />
+        ))}
+      </div>
+      <button
+        className="border-col-bg border-x-col-bg hover:bg-main-bg flex items-center gap-2 rounded-md border-2 p-4 hover:text-rose-500 active:bg-black"
+        onClick={() => props.createTask(props.column.id)}
+      >
+        <PlusIcon /> Add Task
+      </button>
     </div>
   );
 };
