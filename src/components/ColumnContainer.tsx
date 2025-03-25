@@ -1,8 +1,8 @@
-import { useSortable } from "@dnd-kit/sortable";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import MinusIcon from "../icons/MinusIcon";
 import { Column, Id, Task } from "../types";
 import { CSS } from "@dnd-kit/utilities";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import PlusIcon from "../icons/PlusIcon";
 import TaskCard from "./TaskCard";
 interface Props {
@@ -16,6 +16,10 @@ interface Props {
 }
 const ColumnContainer = (props: Props) => {
   const [editMode, setEditMode] = useState(false);
+  const taskIds = useMemo(
+    () => props.tasks.map((task) => task.id),
+    [props.tasks],
+  );
   const {
     attributes,
     listeners,
@@ -84,14 +88,16 @@ const ColumnContainer = (props: Props) => {
         </button>
       </div>
       <div className="flex flex-grow flex-col gap-4 overflow-x-hidden overflow-y-auto p-2">
-        {props.tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            deleteTask={props.deleteTask}
-            updateTask={props.updateTask}
-          />
-        ))}
+        <SortableContext items={taskIds}>
+          {props.tasks.map((task) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              deleteTask={props.deleteTask}
+              updateTask={props.updateTask}
+            />
+          ))}
+        </SortableContext>
       </div>
       <button
         className="border-col-bg border-x-col-bg hover:bg-main-bg flex items-center gap-2 rounded-md border-2 p-4 hover:text-rose-500 active:bg-black"
